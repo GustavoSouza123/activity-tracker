@@ -1,3 +1,22 @@
 * {
     box-sizing: border-box;
 }
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+table {
+    width: 50%;
+}
+
+th {
+    text-align: left;
+}
+
+table, th, td {
+    border: 1px solid #aaa;
+    border-collapse: collapse;
+    padding: 5px;
+}
