@@ -33,8 +33,8 @@
                     echo "<tr>
                             <td>".$value['id']."</td>
                             <td>".$value['name']."</td>
-                            <td class='action edit' row_id='".$value['id']."'>edit</td>
-                            <td class='action delete' row_id='".$value['id']."'>delete</td>
+                            <td class='action edit' row_id='".$value['id']."' row_name='".$value['name']."'>edit</td>
+                            <td class='action delete' row_id='".$value['id']."' row_name='".$value['name']."'>delete</td>
                             <td class='action see'><a href='activity_data.php'>see data</a></td>
                         </tr>";
                 }
@@ -65,11 +65,12 @@
         // delete row
         if(isset($_POST["delete"])) {
             try {
-                // delete table with the name of the activity
-                // make a confirmation screen
                 $id = $_POST["data-id"];
                 $sql = $pdo->prepare("DELETE FROM `activities` WHERE id=?");
                 $sql->execute(array($id));
+
+                $sql = "DROP TABLE IF EXISTS `".$_POST["data-name"]."`";
+                $pdo->exec($sql);
 
                 $message = "activity deleted successfully, refresh the page to see the changes";
             } catch(PDOException $e) {
@@ -85,14 +86,16 @@
             <form action="" method="post">
                 <span>name:</span><input type="text" name="name" /><br>
                 <input type="hidden" name="data-id" />
+                <input type="hidden" name="data-name" />
                 <input type="submit" name="edit" value="ok" />
                 <input type="reset" value="cancel" /><br>
             </form>
         </div>
         <div class="delete">
-            <p>are you sure you want to delete row <span></span>?</p>
+            <p>are you sure you want to delete row <span></span> from `activities` table with all its data?</p>
             <form action="" method="post">
                 <input type="hidden" name="data-id" />
+                <input type="hidden" name="data-name" />
                 <input type="submit" name="delete" value="ok" />
                 <input type="reset" value="cancel" />
             </form>
