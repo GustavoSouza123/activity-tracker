@@ -41,18 +41,16 @@
         }
     ?>
 
-    <h1>Add an activity</h1>
+    <h2>Add an activity</h2>
     <p>Enter the name of the activity you want to add</p>
 
     <form action="" method="post">
         <input type="text" name="name" />
         <input type="submit" value="Submit" />
+        <?php echo $message . "<br>"; ?>
     </form>
-
+    
     <br>
-    <?php echo $message . "<br>"; ?>
-    <br>
-
     <button><a href="index.php">Back to home page</a></button>
 </body>
 </html>

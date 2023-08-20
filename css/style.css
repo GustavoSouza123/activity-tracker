@@ -7,16 +7,37 @@ a {
     text-decoration: none;
 }
 
-table {
-    width: 50%;
+table, th, td {
+    border: 1px solid #fff;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+tr:nth-child(odd) {
+    background-color: #ddd;
 }
 
 th {
     text-align: left;
 }
 
-table, th, td {
-    border: 1px solid #aaa;
-    border-collapse: collapse;
-    padding: 5px;
+td.action,
+td.action a {
+    color: rgb(0, 64, 255);
+    text-decoration: underline;
+    cursor: pointer
+}
+
+.action-window {
+    width: 300px;
+    min-height: 100px;
+    border: 1px solid #eee;
+}
+
+.action-window > div {
+    display: none;
+}
+
+.action-window p {
+    margin: 0;
 }

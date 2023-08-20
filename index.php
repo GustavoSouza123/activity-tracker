@@ -8,7 +8,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css" />
-    <script src="js/jquery.js"></script>
     <title>Activity Tracker</title>
 </head>
 <body>
@@ -19,9 +18,10 @@
         <button class="see-activities"><a href="activities.php">See activities</a></button>
     </div>
 
-    <br><br><br>
+    <br><br><br><br><br>
     <button class="drop-database"><a href="drop_database.php">Drop database</a></button>
 
-    <script src="js/script.js"></script>
+    <!-- <script src="js/jquery.js"></script> -->
+    <!-- <script src="js/script.js"></script> -->
 </body>
 </html>

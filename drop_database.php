@@ -1,6 +1,6 @@
 <?php
     require "connection.php";
-    $sql = "DROP DATABASE `activities`";
+    $sql = "DROP DATABASE `".DBNAME."`";
     $pdo->exec($sql);
 ?>
 
@@ -13,6 +13,7 @@
     <title>Drop database</title>
 </head>
 <body>
+    <h2>Drop database</h2>
     <button><a href="index.php">Back to home page</a></button>
 </body>
 </html>
