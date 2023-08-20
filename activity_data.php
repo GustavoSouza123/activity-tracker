@@ -11,8 +11,16 @@
     <title>Activity data</title>
 </head>
 <body>
-    <h2>Activity data</h2>
+    <?php
+        $activityName = "?";
+        if(isset($_POST["see-data"])) {
+            $activityName = $_POST["data-name"];
+        }
+    ?>
 
+    <h2><?php echo $activityName; ?> data</h2>
+
+    <button><a href="activities.php">Back to activities page</a></button>
     <button><a href="index.php">Back to home page</a></button>
 </body>
 </html>

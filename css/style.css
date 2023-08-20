@@ -22,10 +22,16 @@ th {
 }
 
 td.action,
-td.action a {
+input.action {
     color: rgb(0, 64, 255);
     text-decoration: underline;
-    cursor: pointer
+    cursor: pointer;
+}
+
+input.action {
+    background-color: transparent;
+    border: none;
+    padding: 0;
 }
 
 .action-window {
