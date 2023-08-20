@@ -35,7 +35,12 @@
                             <td>".$value['name']."</td>
                             <td class='action edit' row_id='".$value['id']."' row_name='".$value['name']."'>edit</td>
                             <td class='action delete' row_id='".$value['id']."' row_name='".$value['name']."'>delete</td>
-                            <td class='action see'><a href='activity_data.php'>see data</a></td>
+                            <td class='action see'>
+                                <form action='activity_data.php' method='post'>
+                                    <input type='hidden' name='data-name' value='".$value['name']."' />
+                                    <input class='action' type='submit' name='see-data' value='see data' />
+                                </form>
+                            </td>
                         </tr>";
                 }
                 echo "</table>";
@@ -55,9 +60,16 @@
                     $sql = $pdo->prepare("UPDATE `activities` SET name=? WHERE id=?");
                     $sql->execute(array($_POST["name"], $id));
 
+                    $sql = "ALTER TABLE `".$_POST["data-name"]."` RENAME `".$_POST["name"]."`";
+                    $pdo->exec($sql);
+
                     $message = "activity edited successfully, refresh the page to see the changes";
                 } catch(PDOException $e) {
-                    echo $sql . "<br>" . $e->getMessage();
+                    if($e->getCode() == "42S02") {
+                        $message = "the table `".$_POST["name"]."` has already been renamed";
+                    } else {
+                        echo $sql . "<br>" . $e->getMessage();
+                    }
                 }
             }
         }
