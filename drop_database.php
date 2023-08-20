@@ -38,7 +38,7 @@
     </form>
 
     <br>
-    <p><?php echo $message; ?></p>
+    <p style="margin: 0;"><?php echo $message; ?></p>
 
     <br>
     <button><a href="index.php">Back to home page</a></button>
