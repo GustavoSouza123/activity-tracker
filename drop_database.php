@@ -1,7 +1,5 @@
 <?php
     require "connection.php";
-    $sql = "DROP DATABASE `".DBNAME."`";
-    $pdo->exec($sql);
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +12,35 @@
 </head>
 <body>
     <h2>Drop database</h2>
+
+    <?php
+        $message = "";
+        if(isset($_POST["delete"])) {
+            try {
+                $sql = "DROP DATABASE `".DBNAME."`";
+                $pdo->exec($sql);
+                $message = "database dropped succesfully";
+            } catch(PDOException $e) {
+                echo $sql . "<br>" . $e->getMessage();
+            }
+        }
+
+        if(isset($_POST["cancel"])) {
+            header("Location: index.php");
+            exit();
+        }
+    ?>
+
+    <p>are you sure you want to drop the dabase `<?php echo DBNAME; ?>`?</p>
+    <form action="" method="post">
+        <input type="submit" name="delete" value="ok" />
+        <input type="submit" name="cancel" value="cancel" />
+    </form>
+
+    <br>
+    <p><?php echo $message; ?></p>
+
+    <br>
     <button><a href="index.php">Back to home page</a></button>
 </body>
 </html>

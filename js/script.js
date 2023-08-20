@@ -1,5 +1,5 @@
 $(function() {
-    // actions (edit and delete)
+    // actions (edit and delete) on the activities table
     $('td.action').click(function() {
         var action = $(this).attr('class').split(' ');
         var dataId = $(this).attr('row_id');
