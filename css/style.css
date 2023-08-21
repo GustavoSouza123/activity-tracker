@@ -7,6 +7,8 @@ a {
     text-decoration: none;
 }
 
+/* activities */
+
 table, th, td {
     border: 1px solid #fff;
     border-collapse: collapse;
@@ -37,7 +39,7 @@ input.action {
 .action-window {
     width: 300px;
     min-height: 100px;
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
 }
 
 .action-window > div {
@@ -46,4 +48,17 @@ input.action {
 
 .action-window p {
     margin: 0;
+}
+
+/* activity_data */
+
+form.add-activity {
+    width: 300px;
+    min-height: 100px;
+    border: 1px solid #ddd;
+}
+
+.add-activity span {
+    display: inline-block;
+    width: 80px;
 }

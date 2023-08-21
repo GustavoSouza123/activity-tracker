@@ -14,8 +14,8 @@
     <h2>Activities</h2>
 
     <?php
+        // print all the data in the activities table
         try {
-            // print all the data in the activities table
             $sql = $pdo->prepare("SELECT * FROM `activities`");
             $sql->execute();
             $data = $sql->fetchAll();
