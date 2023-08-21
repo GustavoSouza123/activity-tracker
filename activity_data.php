@@ -12,9 +12,12 @@
 </head>
 <body>
     <?php
+        // set default timezone
+        date_default_timezone_set("America/Sao_Paulo");
+
         // print name of the table as the page's title
-        $activityName = "?";
-        if(isset($_POST["see-data"])) {
+        $activityName = "";
+        if(isset($_POST["see-data"]) || isset($_POST["add-activity"])) {
             $activityName = $_POST["data-name"];
         }
     ?>
@@ -59,12 +62,15 @@
         $day = isset($_POST["day"]) ? $_POST["day"] : "";
         $activity_id = isset($_POST["activity_id"]) ? $_POST["activity_id"] : "";
 
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            if(empty($time_spent) || empty($day) || empty($activity_id)) {
+        if(isset($_POST["add-activity"])) {
+            if(empty($time_spent) || empty($day) || empty($activity_id)) { // *** verify if the int fields are of the int type ***
                 $message = "fill in the required fields";
             } else {
                 try {
+                    $sql = $pdo->prepare("INSERT INTO `".$activityName."` (time_spent, day, activity_id) VALUES (?, ?, ?)");
+                    $sql->execute(array($time_spent, $day, $activity_id));
 
+                    $message = "value added successfully, refresh the page to see the changes";
                 } catch(PDOException $e) {
                     echo $sql . "<br>" . $e->getMessage();
                 }
@@ -76,9 +82,10 @@
     <form class="add-activity" action="" method="post">
         <b>add a value</b><br>
         <span>time spent:</span><input type="text" name="time_spent" /><br>
-        <span>day:</span><input type="text" name="day" /><br>
+        <span>day:</span><input type="date" name="day" value="<?php echo date("Y-m-d"); ?>" /><br>
         <span>activity id:</span><input type="text" name="activity_id" /><br>
-        <input type="submit" value="Submit" />
+        <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
+        <input type="submit" name="add-activity" value="Submit" />
         <?php echo $message . "<br>"; ?>
     </form>
     
