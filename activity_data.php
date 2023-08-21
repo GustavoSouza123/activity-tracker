@@ -56,6 +56,7 @@
             $sql . "<br>" . $e->getMessage();
         }
 
+
         // add a value to the activity table
         $message = "";
         $time_spent = isset($_POST["time_spent"]) ? $_POST["time_spent"] : "";
@@ -86,7 +87,7 @@
         <span>activity id:</span><input type="text" name="activity_id" /><br>
         <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
         <input type="submit" name="add-activity" value="Submit" />
-        <?php echo $message . "<br>"; ?>
+        <p class="error"><?php echo $message; ?></p><br>
     </form>
     
     <br>

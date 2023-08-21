@@ -50,7 +50,7 @@ input.action {
     margin: 0;
 }
 
-/* activity_data */
+/* activities and activity_data */
 
 form.add-activity {
     width: 300px;
@@ -61,4 +61,12 @@ form.add-activity {
 .add-activity span {
     display: inline-block;
     width: 80px;
+}
+
+.add-activity p {
+    margin: 0;
+}
+
+.error {
+    color: #c50000;
 }

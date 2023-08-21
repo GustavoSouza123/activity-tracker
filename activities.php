@@ -49,11 +49,41 @@
             echo $sql . "<br>" . $e->getMessage();
         }
 
+        // add an activity to the activities table
+        $addMessage = "";
+        $name = isset($_POST["name"]) ? $_POST["name"] : "";
+
+        if(isset($_POST["add-activity"])) {
+            if(empty($name)) {
+                $addMessage = "fill in the required fields";
+            } else {
+                try {
+                    $sql = $pdo->prepare("INSERT INTO `activities` (name) VALUES (?)");
+                    $sql->execute(array($name));
+
+                    $sql = "CREATE TABLE IF NOT EXISTS `$name` (
+                                id INT NOT NULL AUTO_INCREMENT,
+                                time_spent INT NOT NULL,
+                                day DATE NOT NULL,
+                                activity_id INT NOT NULL,
+                                PRIMARY KEY(id),
+                                FOREIGN KEY(activity_id) REFERENCES activities(id)
+                            )";
+                    $pdo->exec($sql);
+
+                    $addMessage = "activity added successfully, refresh the page to see the changes";
+                    header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
+                } catch(PDOException $e) {
+                    echo $sql . "<br>" . $e->getMessage();
+                }
+            }
+        }
+
         // edit row
-        $message = "";
+        $actionMessage = "";
         if(isset($_POST["edit"])) {
             if(empty($_POST["name"])) {
-                $message = "fill in the required fields";
+                $actionMessage = "fill in the required fields";
             } else {
                 try {
                     $id = $_POST["data-id"];
@@ -63,10 +93,10 @@
                     $sql = "ALTER TABLE `".$_POST["data-name"]."` RENAME `".$_POST["name"]."`";
                     $pdo->exec($sql);
 
-                    $message = "activity edited successfully, refresh the page to see the changes";
+                    $actionMessage = "activity edited successfully, refresh the page to see the changes";
                 } catch(PDOException $e) {
                     if($e->getCode() == "42S02") {
-                        $message = "the table `".$_POST["name"]."` has already been renamed";
+                        $actionMessage = "the table `".$_POST["name"]."` has already been renamed";
                     } else {
                         echo $sql . "<br>" . $e->getMessage();
                     }
@@ -84,12 +114,21 @@
                 $sql = "DROP TABLE IF EXISTS `".$_POST["data-name"]."`";
                 $pdo->exec($sql);
 
-                $message = "activity deleted successfully, refresh the page to see the changes";
+                $actionMessage = "activity deleted successfully, refresh the page to see the changes";
             } catch(PDOException $e) {
                 echo $sql . "<br>" . $e->getMessage();
             }
         }
     ?>
+
+    <br>
+    <form class="add-activity" action="" method="post">
+        <b>add an activity</b>
+        <p>enter the name of the activity you want to add</p>
+        <input type="text" name="name" />
+        <input type="submit" name="add-activity" value="ok" /><br>
+        <p class="error"><?php echo $addMessage; ?></p><br>
+    </form>
 
     <br>
     <div class="action-window">
@@ -112,7 +151,7 @@
                 <input type="reset" value="cancel" />
             </form>
         </div>
-        <p class="error"><?php echo $message; ?></p>
+        <p class="error"><?php echo $actionMessage; ?></p>
     </div>
 
     <br>
