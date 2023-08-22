@@ -1,0 +1,6 @@
+*** TO DO LIST ***
+
+- verify if the int fields are of the int type when adding a value to the `activity` table
+- print max, min and average values for `time_spent`
+- select and deselect columns
+- select data based on the month (use LIKE "%-08-%" on the query - look up)
