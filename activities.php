@@ -71,10 +71,9 @@
                             )";
                     $pdo->exec($sql);
 
-                    $addMessage = "activity added successfully, refresh the page to see the changes";
                     header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
                 } catch(PDOException $e) {
-                    echo $sql . "<br>" . $e->getMessage();
+                    $addMessage = $sql . "<br>" . $e->getMessage();
                 }
             }
         }
@@ -93,12 +92,12 @@
                     $sql = "ALTER TABLE `".$_POST["data-name"]."` RENAME `".$_POST["name"]."`";
                     $pdo->exec($sql);
 
-                    $actionMessage = "activity edited successfully, refresh the page to see the changes";
+                    header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
                 } catch(PDOException $e) {
                     if($e->getCode() == "42S02") {
                         $actionMessage = "the table `".$_POST["name"]."` has already been renamed";
                     } else {
-                        echo $sql . "<br>" . $e->getMessage();
+                        $actionMessage = $sql . "<br>" . $e->getMessage();
                     }
                 }
             }
@@ -114,9 +113,9 @@
                 $sql = "DROP TABLE IF EXISTS `".$_POST["data-name"]."`";
                 $pdo->exec($sql);
 
-                $actionMessage = "activity deleted successfully, refresh the page to see the changes";
+                header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
             } catch(PDOException $e) {
-                echo $sql . "<br>" . $e->getMessage();
+                $actionMessage = $sql . "<br>" . $e->getMessage();
             }
         }
     ?>
@@ -158,6 +157,6 @@
     <button><a href="index.php">Back to home page</a></button>
 
     <script src="js/jquery.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/activities.js"></script>
 </body>
 </html>

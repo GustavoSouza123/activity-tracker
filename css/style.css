@@ -38,7 +38,7 @@ input.action {
 
 .action-window {
     width: 300px;
-    min-height: 100px;
+    min-height: 120px;
     border: 1px solid #ddd;
 }
 
