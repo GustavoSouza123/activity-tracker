@@ -23,6 +23,10 @@ th {
     text-align: left;
 }
 
+th.action {
+    font-weight: normal;
+}
+
 td.action,
 input.action {
     color: rgb(0, 64, 255);

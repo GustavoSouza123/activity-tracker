@@ -27,7 +27,7 @@
                     <tr>
                         <th>id</th>
                         <th>name</th>
-                        <th colspan='3'>action</th>
+                        <th class='action' colspan='3'>action</th>
                     </tr>";
                 foreach($data as $key => $value) {
                     echo "<tr>

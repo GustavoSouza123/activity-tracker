@@ -30,11 +30,17 @@
     <?php
         // data order
         $field = "id";
+        if(isset($_COOKIE["field"])) {
+            $field = $_COOKIE["field"];
+        }
         if(isset($_GET["field"])) {
             $field = $_GET["field"];
             setcookie("field", $field, time()+86400, "/");
         }
         $order = "ASC";
+        if(isset($_COOKIE["order"])) {
+            $order = $_COOKIE["order"];
+        }
         if(isset($_GET["order"])) {
             $order = strtoupper($_GET["order"]);
             setcookie("order", $order, time()+86400, "/");
@@ -42,18 +48,18 @@
     ?>
 
     <form action="" method="get">
-        <span>ordenar por:</span>
+        <span>order by:</span>
         <select name="field" id="field">
-            <option value="id" <?php if(isset($_GET["field"]) && $_GET["field"] == "id") echo "selected"; ?>>id</option>
-            <option value="time_spent" <?php if(isset($_GET["field"]) && $_GET["field"] == "time_spent") echo "selected"; ?> >time_spent</option>
-            <option value="day" <?php if(isset($_GET["field"]) && $_GET["field"] == "day") echo "selected"; ?>>day</option>
-            <option value="activity_id" <?php if(isset($_GET["field"]) && $_GET["field"] == "activity_id") echo "selected"; ?>>activity_id</option>
+            <option value="id" <?php if($field == "id") echo "selected"; ?>>id</option>
+            <option value="time_spent" <?php if($field == "time_spent") echo "selected"; ?> >time_spent</option>
+            <option value="day" <?php if($field == "day") echo "selected"; ?>>day</option>
+            <option value="activity_id" <?php if($field == "activity_id") echo "selected"; ?>>activity_id</option>
         </select>
         <select name="order" id="order">
-            <option value="asc" <?php if(isset($_GET["order"]) && $_GET["order"] == "asc") echo "selected"; ?>>asc</option>
-            <option value="desc" <?php if(isset($_GET["order"]) && $_GET["order"] == "desc") echo "selected"; ?>>desc</option>
+            <option value="asc" <?php if($order == "ASC") echo "selected"; ?>>asc</option>
+            <option value="desc" <?php if($order == "DESC") echo "selected"; ?>>desc</option>
         </select>
-        <input type="submit" name="orderby" value="ordenar">
+        <input type="submit" name="orderby" value="order">
     </form><br>
 
     <?php
@@ -72,7 +78,7 @@
                         <th>time_spent</th>
                         <th>day</th>
                         <th>activity_id</th>
-                        <th colspan='2'>action</th>
+                        <th class='action' colspan='2'>action</th>
                     </tr>";
                 foreach($data as $key => $value) {
                     echo "<tr>
