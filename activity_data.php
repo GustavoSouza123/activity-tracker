@@ -28,9 +28,38 @@
     <h2>`<?php echo $activityName; ?>` data</h2>
 
     <?php
+        // data order
+        $field = "id";
+        if(isset($_GET["field"])) {
+            $field = $_GET["field"];
+            setcookie("field", $field, time()+86400, "/");
+        }
+        $order = "ASC";
+        if(isset($_GET["order"])) {
+            $order = strtoupper($_GET["order"]);
+            setcookie("order", $order, time()+86400, "/");
+        }
+    ?>
+
+    <form action="" method="get">
+        <span>ordenar por:</span>
+        <select name="field" id="field">
+            <option value="id" <?php if(isset($_GET["field"]) && $_GET["field"] == "id") echo "selected"; ?>>id</option>
+            <option value="time_spent" <?php if(isset($_GET["field"]) && $_GET["field"] == "time_spent") echo "selected"; ?> >time_spent</option>
+            <option value="day" <?php if(isset($_GET["field"]) && $_GET["field"] == "day") echo "selected"; ?>>day</option>
+            <option value="activity_id" <?php if(isset($_GET["field"]) && $_GET["field"] == "activity_id") echo "selected"; ?>>activity_id</option>
+        </select>
+        <select name="order" id="order">
+            <option value="asc" <?php if(isset($_GET["order"]) && $_GET["order"] == "asc") echo "selected"; ?>>asc</option>
+            <option value="desc" <?php if(isset($_GET["order"]) && $_GET["order"] == "desc") echo "selected"; ?>>desc</option>
+        </select>
+        <input type="submit" name="orderby" value="ordenar">
+    </form><br>
+
+    <?php
         // print all the data in the activity table
         try {
-            $sql = $pdo->prepare("SELECT * FROM `".$activityName."`");
+            $sql = $pdo->prepare("SELECT * FROM `".$activityName."` ORDER BY ".$field." ".$order);
             $sql->execute();
             $data = $sql->fetchAll();
 
@@ -60,7 +89,9 @@
         } catch(PDOException $e) {
             echo $e->getMessage();
         }
+    ?>
 
+    <?php
         // add a value to the activity table
         $addMessage = "";
         $time_spent = isset($_POST["time_spent"]) ? $_POST["time_spent"] : "";
