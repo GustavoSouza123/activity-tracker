@@ -95,6 +95,10 @@
         } catch(PDOException $e) {
             echo $e->getMessage();
         }
+
+        // print the total time spent
+        // ** I STOPPED HERE **
+        // print the average of the time spent
     ?>
 
     <?php
@@ -155,6 +159,11 @@
             }
         }
     ?>
+
+    <div class="stats">
+        <p class="total">Total: <span></span></p>
+        <p class="avg">Average: <span></span></p>
+    </div>
 
     <br>
     <form class="add-activity" action="" method="post">

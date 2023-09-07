@@ -54,6 +54,14 @@ input.action {
     margin: 0;
 }
 
+/* stats (activity_data) */
+
+.stats {
+    width: 300px;
+    min-height: 100px;
+    border: 1px solid #ddd;
+}
+
 /* activities and activity_data */
 
 form.add-activity {
