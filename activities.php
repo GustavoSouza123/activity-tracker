@@ -54,7 +54,7 @@
         $name = isset($_POST["name"]) ? $_POST["name"] : "";
 
         if(isset($_POST["add-activity"])) {
-            if(empty($name)) {
+            if(!isset($name)) {
                 $addMessage = "fill in the required fields";
             } else {
                 try {
@@ -65,9 +65,7 @@
                                 id INT NOT NULL AUTO_INCREMENT,
                                 time_spent INT NOT NULL,
                                 day DATE NOT NULL,
-                                activity_id INT NOT NULL,
-                                PRIMARY KEY(id),
-                                FOREIGN KEY(activity_id) REFERENCES activities(id)
+                                PRIMARY KEY(id)
                             )";
                     $pdo->exec($sql);
 
@@ -81,7 +79,7 @@
         // edit row
         $actionMessage = "";
         if(isset($_POST["edit"])) {
-            if(empty($_POST["name"])) {
+            if(!isset($_POST["name"])) {
                 $actionMessage = "fill in the required fields";
             } else {
                 try {

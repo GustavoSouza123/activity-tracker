@@ -19,9 +19,10 @@
         $activityName = "";
         if(isset($_COOKIE["tbname"])) {
             $activityName = $_COOKIE["tbname"];
-        } else if(isset($_POST["see-data"])) {
+        }
+        if(isset($_POST["see-data"])) {
             $activityName = $_POST["data-name"];
-            setcookie("tbname", $activityName, time()+86400, "/");
+            setcookie("tbname", $activityName, time()+86400*30, "/");
         }
     ?>
 
@@ -35,7 +36,7 @@
         }
         if(isset($_GET["field"])) {
             $field = $_GET["field"];
-            setcookie("field", $field, time()+86400, "/");
+            setcookie("field", $field, time()+86400*30, "/");
         }
         $order = "ASC";
         if(isset($_COOKIE["order"])) {
@@ -43,7 +44,20 @@
         }
         if(isset($_GET["order"])) {
             $order = strtoupper($_GET["order"]);
-            setcookie("order", $order, time()+86400, "/");
+            setcookie("order", $order, time()+86400*30, "/");
+        }
+
+        // columns to show
+        $columnsToShow = array(1, 1, 1);
+
+        if(isset($_COOKIE["columnsToShow"])) {
+            $columnsToShow = explode(" ", $_COOKIE["columnsToShow"]);
+        }
+        if(isset($_POST["columns_to_show"])) {
+            $columnsToShow[0] = (isset($_POST["show_id"])) ? 1 : 0;
+            $columnsToShow[1] = (isset($_POST["show_time"])) ? 1 : 0;
+            $columnsToShow[2] = (isset($_POST["show_day"])) ? 1 : 0;
+            setcookie("columnsToShow", implode(" ", $columnsToShow), time()+86400*30, "/");
         }
     ?>
 
@@ -53,13 +67,20 @@
             <option value="id" <?php if($field == "id") echo "selected"; ?>>id</option>
             <option value="time_spent" <?php if($field == "time_spent") echo "selected"; ?> >time_spent</option>
             <option value="day" <?php if($field == "day") echo "selected"; ?>>day</option>
-            <option value="activity_id" <?php if($field == "activity_id") echo "selected"; ?>>activity_id</option>
         </select>
         <select name="order" id="order">
             <option value="asc" <?php if($order == "ASC") echo "selected"; ?>>asc</option>
             <option value="desc" <?php if($order == "DESC") echo "selected"; ?>>desc</option>
         </select>
         <input type="submit" name="orderby" value="order">
+    </form>
+
+    <form action="" method="post">
+        <span>show:</span>
+        <input type="checkbox" name="show_id" id="id" <?php if($columnsToShow[0] == 1) echo "value='1'; checked"; else echo "value='0';" ?> />id
+        <input type="checkbox" name="show_time" id="time" <?php if($columnsToShow[1] == 1) echo "value='1'; checked"; else echo "value='0';" ?> />time
+        <input type="checkbox" name="show_day" id="day" <?php if($columnsToShow[2] == 1) echo "value='1'; checked"; else echo "value='0';" ?> />day
+        <input type="submit" name="columns_to_show" value="show" />
     </form><br>
 
     <?php
@@ -77,7 +98,6 @@
                         <th>id</th>
                         <th>time_spent</th>
                         <th>day</th>
-                        <th>activity_id</th>
                         <th class='action' colspan='2'>action</th>
                     </tr>";
                 foreach($data as $key => $value) {
@@ -85,8 +105,7 @@
                             <td>".$value['id']."</td>
                             <td>".$value['time_spent']."</td>
                             <td>".$value['day']."</td>
-                            <td>".$value['activity_id']."</td>
-                            <td class='action edit' row_id='".$value['id']."' row_time='".$value['time_spent']."' row_day='".$value['day']."' row_activity='".$value['activity_id']."'>edit</td>
+                            <td class='action edit' row_id='".$value['id']."' row_time='".$value['time_spent']."' row_day='".$value['day']."'>edit</td>
                             <td class='action delete' row_id='".$value['id']."'>delete</td>
                         </tr>";
                 }
@@ -96,15 +115,23 @@
             echo $e->getMessage();
         }
 
-        // print the total time spent
+        // get the total time spent
         $sql = $pdo->prepare("SELECT SUM(time_spent) AS time_spent_sum FROM `".$activityName."`");
         $sql->execute();
-        $totalTimeSpent = $sql->fetch(PDO::FETCH_ASSOC);
+        $row = $sql->fetch(PDO::FETCH_ASSOC);
+        $totalTimeSpent = $row['time_spent_sum'];
 
-        // print the average of the time spent
+        // get the average of the time spent
         $sql = $pdo->prepare("SELECT AVG(time_spent) AS time_spent_avg FROM `".$activityName."`");
         $sql->execute();
-        $avgTimeSpent = $sql->fetch(PDO::FETCH_ASSOC);
+        $row = $sql->fetch(PDO::FETCH_ASSOC);
+        $avgTimeSpent = $row['time_spent_avg'];
+
+        // get the total days
+        $sql = $pdo->prepare("SELECT COUNT(*) AS total_days FROM `".$activityName."`");
+        $sql->execute();
+        $row = $sql->fetch(PDO::FETCH_ASSOC);
+        $totalDays = $row['total_days'];
     ?>
 
     <?php
@@ -112,15 +139,14 @@
         $addMessage = "";
         $time_spent = isset($_POST["time_spent"]) ? $_POST["time_spent"] : "";
         $day = isset($_POST["day"]) ? $_POST["day"] : "";
-        $activity_id = isset($_POST["activity_id"]) ? $_POST["activity_id"] : "";
 
         if(isset($_POST["add-activity"])) {
-            if(empty($time_spent) || empty($day) || empty($activity_id)) { // *** verify if the int fields are of the int type ***
+            if(!isset($time_spent) || !isset($day)) { // *** verify if the int fields are of the int type ***
                 $addMessage = "fill in the required fields";
             } else {
                 try {
-                    $sql = $pdo->prepare("INSERT INTO `".$activityName."` (time_spent, day, activity_id) VALUES (?, ?, ?)");
-                    $sql->execute(array($time_spent, $day, $activity_id));
+                    $sql = $pdo->prepare("INSERT INTO `".$activityName."` (time_spent, day) VALUES (?, ?)");
+                    $sql->execute(array($time_spent, $day));
 
                     header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
                 } catch(PDOException $e) {
@@ -132,13 +158,13 @@
         // edit row
         $actionMessage = "";
         if(isset($_POST["edit"])) {
-            if(empty($_POST["time"])) {
+            if(!isset($_POST["time"])) {
                 $actionMessage = "fill in the required fields";
             } else {
                 try {
                     $id = $_POST["data-id"];
-                    $sql = $pdo->prepare("UPDATE ".$activityName." SET time_spent=?, day=?, activity_id=? WHERE id=?");
-                    $sql->execute(array($_POST["time"], $_POST["day"], $_POST["activity_id"], $id));
+                    $sql = $pdo->prepare("UPDATE ".$activityName." SET time_spent=?, day=? WHERE id=?");
+                    $sql->execute(array($_POST["time"], $_POST["day"], $id));
 
                     header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
                 } catch(PDOException $e) {
@@ -164,12 +190,13 @@
                 $actionMessage = $sql . "<br>" . $e->getMessage();
             }
         }
-    ?>
+    ?><br>
 
     <div class="stats">
         <b>stats</b><br>
-        <span class="total">total: <?php echo $totalTimeSpent['time_spent_sum']; ?> mins / <?php echo $totalTimeSpent['time_spent_sum']/60; ?> hrs</span><br>
-        <span class="avg">average (per day): <?php echo intval($avgTimeSpent['time_spent_avg']); ?> min / <?php echo $avgTimeSpent['time_spent_avg']/60; ?> hrs</span>
+        <span class="total">total: <?php echo round($totalTimeSpent/60, 2); ?> hrs</span><br>
+        <span class="avg">average/day: <?php echo round($avgTimeSpent/60, 2); ?> hrs (<?php echo round($avgTimeSpent, 2); ?> mins)</span><br>
+        <span class="days">total days: <?php echo $totalDays; ?></span>
     </div>
 
     <br>
@@ -177,7 +204,6 @@
         <b>add a value</b><br>
         <span>time spent:</span><input type="text" name="time_spent" /><br>
         <span>day:</span><input type="date" name="day" value="<?php echo date("Y-m-d"); ?>" /><br>
-        <span>activity id:</span><input type="text" name="activity_id" /><br>
         <input type="submit" name="add-activity" value="ok" />
         <p class="error"><?php echo $addMessage; ?></p><br>
     </form>
@@ -189,7 +215,6 @@
             <form action="" method="post">
                 <span>time spent:</span><input type="text" name="time" /><br>
                 <span>day:</span><input type="date" name="day" /><br>
-                <span>activity id:</span><input type="text" name="activity_id" /><br>
                 <input type="hidden" name="data-id" />
                 <input type="hidden" name="data-time" />
                 <input type="hidden" name="data-day" />
