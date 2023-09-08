@@ -39,22 +39,20 @@ $(function() {
 
     if(showId == 0) {
         $('th').eq(0).hide();
-        for(i = 0; i < $('tr').lenght; i++) {
+        for(i = 0; i < $('tr').length; i++) {
             $('tr').eq(i).find('td').eq(0).hide(); /* PAREI AQUI, ERRO */
         }
     }
     if(showTime == 0) {
         $('th').eq(1).hide();
-        for(i = 0; i < $('tr').lenght; i++) {
+        for(i = 0; i < $('tr').length; i++) {
             $('tr').eq(i).find('td').eq(1).hide();
         }
     }
     if(showDay == 0) {
         $('th').eq(2).hide();
-        for(i = 0; i < $('tr').lenght; i++) {
+        for(i = 0; i < $('tr').length; i++) {
             $('tr').eq(i).find('td').eq(2).hide();
         }
     }
-
-    console.log(showId + ", " + showTime + ", " + showDay);
 })
