@@ -38,6 +38,7 @@
             $field = $_GET["field"];
             setcookie("field", $field, time()+86400*30, "/");
         }
+
         $order = "ASC";
         if(isset($_COOKIE["order"])) {
             $order = $_COOKIE["order"];
@@ -49,7 +50,6 @@
 
         // columns to show
         $columnsToShow = array(1, 1, 1);
-
         if(isset($_COOKIE["columnsToShow"])) {
             $columnsToShow = explode(" ", $_COOKIE["columnsToShow"]);
         }
@@ -58,6 +58,34 @@
             $columnsToShow[1] = (isset($_POST["show_time"])) ? 1 : 0;
             $columnsToShow[2] = (isset($_POST["show_day"])) ? 1 : 0;
             setcookie("columnsToShow", implode(" ", $columnsToShow), time()+86400*30, "/");
+        }
+
+        // data period
+        $period = "alltime";
+        if(isset($_COOKIE["period"])) {
+            $period = $_COOKIE["period"];
+        }
+        if(isset($_GET["period"])) {
+            $period = $_GET["period"];
+            setcookie("period", $period, time()+86400*30, "/");
+        }
+
+        if($period == "alltime") {
+            $dayPattern = "day LIKE '%'";
+        } else if($period == "last7days") {
+            $dayPattern = "day >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+        } else if($period == "last14days") {
+            $dayPattern = "day >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)";
+        } else if($period == "last30days") {
+            $dayPattern = "day >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
+        } else if($period == "thismonth") {
+            $dayPattern = "MONTH(day) = MONTH(CURDATE())";
+        } else if($period == "lastmonth") {
+            $dayPattern = "MONTH(day) = DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+        } else if($period == "last3months") {
+            $dayPattern = "day >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
+        } else if($period == "last6months") {
+            $dayPattern = "day >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)";
         }
     ?>
 
@@ -72,7 +100,7 @@
             <option value="asc" <?php if($order == "ASC") echo "selected"; ?>>asc</option>
             <option value="desc" <?php if($order == "DESC") echo "selected"; ?>>desc</option>
         </select>
-        <input type="submit" name="orderby" value="order">
+        <input type="submit" value="order">
     </form>
 
     <form action="" method="post">
@@ -81,12 +109,27 @@
         <input type="checkbox" name="show_time" id="time" <?php if($columnsToShow[1] == 1) echo "value='1'; checked"; else echo "value='0';" ?> />time
         <input type="checkbox" name="show_day" id="day" <?php if($columnsToShow[2] == 1) echo "value='1'; checked"; else echo "value='0';" ?> />day
         <input type="submit" name="columns_to_show" value="show" />
+    </form>
+
+    <form action="" method="get">
+        <span>period:</span>
+        <select name="period" id="period">
+            <option value="alltime">all time</option>
+            <option value="last7days">last 7 days</option>
+            <option value="last14days">last 14 days</option>
+            <option value="last30days">last 30 days</option>
+            <option value="thismonth">this month</option>
+            <option value="lastmonth">last month</option>
+            <option value="last3months">last 3 months</option>
+            <option value="last6months">last 6 months</option>
+        </select>
+        <input type="submit" value="show" />
     </form><br>
 
     <?php
         // print all the data in the activity table
         try {
-            $sql = $pdo->prepare("SELECT * FROM `".$activityName."` ORDER BY ".$field." ".$order);
+            $sql = $pdo->prepare("SELECT * FROM `".$activityName."` WHERE ".$dayPattern." ORDER BY ".$field." ".$order);
             $sql->execute();
             $data = $sql->fetchAll();
 
@@ -148,6 +191,7 @@
                     $sql = $pdo->prepare("INSERT INTO `".$activityName."` (time_spent, day) VALUES (?, ?)");
                     $sql->execute(array($time_spent, $day));
 
+                    /* ERROR ON THIS LINE: */
                     header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
                 } catch(PDOException $e) {
                     $addMessage = $sql . "<br>" . $e->getMessage();

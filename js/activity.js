@@ -40,7 +40,7 @@ $(function() {
     if(showId == 0) {
         $('th').eq(0).hide();
         for(i = 0; i < $('tr').length; i++) {
-            $('tr').eq(i).find('td').eq(0).hide(); /* PAREI AQUI, ERRO */
+            $('tr').eq(i).find('td').eq(0).hide();
         }
     }
     if(showTime == 0) {
