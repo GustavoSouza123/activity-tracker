@@ -97,8 +97,14 @@
         }
 
         // print the total time spent
-        // ** I STOPPED HERE **
+        $sql = $pdo->prepare("SELECT SUM(time_spent) AS time_spent_sum FROM `".$activityName."`");
+        $sql->execute();
+        $totalTimeSpent = $sql->fetch(PDO::FETCH_ASSOC);
+
         // print the average of the time spent
+        $sql = $pdo->prepare("SELECT AVG(time_spent) AS time_spent_avg FROM `".$activityName."`");
+        $sql->execute();
+        $avgTimeSpent = $sql->fetch(PDO::FETCH_ASSOC);
     ?>
 
     <?php
@@ -161,8 +167,9 @@
     ?>
 
     <div class="stats">
-        <p class="total">Total: <span></span></p>
-        <p class="avg">Average: <span></span></p>
+        <b>stats</b><br>
+        <span class="total">total: <?php echo $totalTimeSpent['time_spent_sum']; ?> mins / <?php echo $totalTimeSpent['time_spent_sum']/60; ?> hrs</span><br>
+        <span class="avg">average (per day): <?php echo intval($avgTimeSpent['time_spent_avg']); ?> min / <?php echo $avgTimeSpent['time_spent_avg']/60; ?> hrs</span>
     </div>
 
     <br>
