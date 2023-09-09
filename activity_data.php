@@ -81,7 +81,7 @@
         } else if($period == "thismonth") {
             $dayPattern = "MONTH(day) = MONTH(CURDATE())";
         } else if($period == "lastmonth") {
-            $dayPattern = "MONTH(day) = DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+            $dayPattern = "MONTH(day) = MONTH(CURDATE())-1";
         } else if($period == "last3months") {
             $dayPattern = "day >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
         } else if($period == "last6months") {
@@ -114,14 +114,14 @@
     <form action="" method="get">
         <span>period:</span>
         <select name="period" id="period">
-            <option value="alltime">all time</option>
-            <option value="last7days">last 7 days</option>
-            <option value="last14days">last 14 days</option>
-            <option value="last30days">last 30 days</option>
-            <option value="thismonth">this month</option>
-            <option value="lastmonth">last month</option>
-            <option value="last3months">last 3 months</option>
-            <option value="last6months">last 6 months</option>
+            <option value="alltime" <?php if($period == "alltime") echo "selected"; ?>>all time</option>
+            <option value="last7days" <?php if($period == "last7days") echo "selected"; ?>>last 7 days</option>
+            <option value="last14days" <?php if($period == "last14days") echo "selected"; ?>>last 14 days</option>
+            <option value="last30days" <?php if($period == "last30days") echo "selected"; ?>>last 30 days</option>
+            <option value="thismonth" <?php if($period == "thismonth") echo "selected"; ?>>this month</option>
+            <option value="lastmonth" <?php if($period == "lastmonth") echo "selected"; ?>>last month</option>
+            <option value="last3months" <?php if($period == "last3months") echo "selected"; ?>>last 3 months</option>
+            <option value="last6months" <?php if($period == "last6months") echo "selected"; ?>>last 6 months</option>
         </select>
         <input type="submit" value="show" />
     </form><br>
@@ -159,123 +159,80 @@
         }
 
         // get the total time spent
-        $sql = $pdo->prepare("SELECT SUM(time_spent) AS time_spent_sum FROM `".$activityName."`");
+        $sql = $pdo->prepare("SELECT SUM(time_spent) AS time_spent_sum FROM `".$activityName."` WHERE ".$dayPattern);
         $sql->execute();
         $row = $sql->fetch(PDO::FETCH_ASSOC);
         $totalTimeSpent = $row['time_spent_sum'];
 
         // get the average of the time spent
-        $sql = $pdo->prepare("SELECT AVG(time_spent) AS time_spent_avg FROM `".$activityName."`");
+        $sql = $pdo->prepare("SELECT AVG(time_spent) AS time_spent_avg FROM `".$activityName."` WHERE ".$dayPattern);
         $sql->execute();
         $row = $sql->fetch(PDO::FETCH_ASSOC);
         $avgTimeSpent = $row['time_spent_avg'];
 
         // get the total days
-        $sql = $pdo->prepare("SELECT COUNT(*) AS total_days FROM `".$activityName."`");
+        $sql = $pdo->prepare("SELECT COUNT(*) AS total_days FROM `".$activityName."` WHERE ".$dayPattern);
         $sql->execute();
         $row = $sql->fetch(PDO::FETCH_ASSOC);
         $totalDays = $row['total_days'];
     ?>
 
-    <?php
-        // add a value to the activity table
-        $addMessage = "";
-        $time_spent = isset($_POST["time_spent"]) ? $_POST["time_spent"] : "";
-        $day = isset($_POST["day"]) ? $_POST["day"] : "";
-
-        if(isset($_POST["add-activity"])) {
-            if(!isset($time_spent) || !isset($day)) { // *** verify if the int fields are of the int type ***
-                $addMessage = "fill in the required fields";
-            } else {
-                try {
-                    $sql = $pdo->prepare("INSERT INTO `".$activityName."` (time_spent, day) VALUES (?, ?)");
-                    $sql->execute(array($time_spent, $day));
-
-                    /* ERROR ON THIS LINE: */
-                    header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
-                } catch(PDOException $e) {
-                    $addMessage = $sql . "<br>" . $e->getMessage();
-                }
-            }
-        }
-
-        // edit row
-        $actionMessage = "";
-        if(isset($_POST["edit"])) {
-            if(!isset($_POST["time"])) {
-                $actionMessage = "fill in the required fields";
-            } else {
-                try {
-                    $id = $_POST["data-id"];
-                    $sql = $pdo->prepare("UPDATE ".$activityName." SET time_spent=?, day=? WHERE id=?");
-                    $sql->execute(array($_POST["time"], $_POST["day"], $id));
-
-                    header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
-                } catch(PDOException $e) {
-                    if($e->getCode() == "42S02") {
-                        // $actionMessage = "the table `".$_POST["time"]."` has already been renamed"; ***TEMPORARY
-                        $actionMessage = "error code 42S02, see the pdo exception on the 'edit row' code";
-                    } else {
-                        $actionMessage = $sql . "<br>" . $e->getMessage();
-                    }
-                }
-            }
-        }
-
-        // delete row
-        if(isset($_POST["delete"])) {
-            try {
-                $id = $_POST["data-id"];
-                $sql = $pdo->prepare("DELETE FROM ".$activityName." WHERE id=?");
-                $sql->execute(array($id));
-
-                header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
-            } catch(PDOException $e) {
-                $actionMessage = $sql . "<br>" . $e->getMessage();
-            }
-        }
-    ?><br>
-
+    <br>
     <div class="stats">
-        <b>stats</b><br>
+        <div class="stats-header">
+            <b>stats</b>
+            <form action="" method="get">
+                <select name="period" id="period">
+                    <option value="alltime" <?php if($period == "alltime") echo "selected"; ?>>all time</option>
+                    <option value="last7days" <?php if($period == "last7days") echo "selected"; ?>>last 7 days</option>
+                    <option value="last14days" <?php if($period == "last14days") echo "selected"; ?>>last 14 days</option>
+                    <option value="last30days" <?php if($period == "last30days") echo "selected"; ?>>last 30 days</option>
+                    <option value="thismonth" <?php if($period == "thismonth") echo "selected"; ?>>this month</option>
+                    <option value="lastmonth" <?php if($period == "lastmonth") echo "selected"; ?>>last month</option>
+                    <option value="last3months" <?php if($period == "last3months") echo "selected"; ?>>last 3 months</option>
+                    <option value="last6months" <?php if($period == "last6months") echo "selected"; ?>>last 6 months</option>
+                </select>
+                <input type="submit" value="show" />
+            </form>
+        </div>
         <span class="total">total: <?php echo round($totalTimeSpent/60, 2); ?> hrs</span><br>
         <span class="avg">average/day: <?php echo round($avgTimeSpent/60, 2); ?> hrs (<?php echo round($avgTimeSpent, 2); ?> mins)</span><br>
         <span class="days">total days: <?php echo $totalDays; ?></span>
     </div>
 
     <br>
-    <form class="add-activity" action="" method="post">
+    <form class="add-activity" action="success.php" method="post">
         <b>add a value</b><br>
+        <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
         <span>time spent:</span><input type="text" name="time_spent" /><br>
         <span>day:</span><input type="date" name="day" value="<?php echo date("Y-m-d"); ?>" /><br>
         <input type="submit" name="add-activity" value="ok" />
-        <p class="error"><?php echo $addMessage; ?></p><br>
     </form>
 
     <br>
     <div class="action-window">
         <b>action window</b>
         <div class="edit">
-            <form action="" method="post">
+            <form action="success.php" method="post">
                 <span>time spent:</span><input type="text" name="time" /><br>
                 <span>day:</span><input type="date" name="day" /><br>
+                <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
                 <input type="hidden" name="data-id" />
                 <input type="hidden" name="data-time" />
                 <input type="hidden" name="data-day" />
-                <input type="hidden" name="data-activity" />
                 <input type="submit" name="edit" value="ok" />
                 <input type="reset" value="cancel" /><br>
             </form>
         </div>
         <div class="delete">
             <p>are you sure you want to delete row <span></span> from `<?php echo $activityName; ?>` table with all its data?</p>
-            <form action="" method="post">
+            <form action="success.php" method="post">
+                <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
                 <input type="hidden" name="data-id" />
                 <input type="submit" name="delete" value="ok" />
                 <input type="reset" value="cancel" />
             </form>
         </div>
-        <p class="error"><?php echo $actionMessage; ?></p>
     </div>
     
     <br>

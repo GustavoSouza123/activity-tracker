@@ -7,7 +7,7 @@ a {
     text-decoration: none;
 }
 
-/* activities */
+/* table (activities and activity_data) */
 
 table, th, td {
     border: 1px solid #fff;
@@ -21,6 +21,23 @@ tr:nth-child(odd) {
 
 th {
     text-align: left;
+}
+
+/* windows (activities and activity_data) */
+
+form.add-activity {
+    width: 300px;
+    min-height: 100px;
+    border: 1px solid #ddd;
+}
+
+.add-activity span {
+    display: inline-block;
+    width: 80px;
+}
+
+.add-activity p {
+    margin: 0;
 }
 
 th.action {
@@ -62,23 +79,8 @@ input.action {
     border: 1px solid #ddd;
 }
 
-/* activities and activity_data */
-
-form.add-activity {
-    width: 300px;
-    min-height: 100px;
-    border: 1px solid #ddd;
-}
-
-.add-activity span {
-    display: inline-block;
-    width: 80px;
-}
-
-.add-activity p {
-    margin: 0;
-}
-
-.error {
-    color: #c50000;
+.stats-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
