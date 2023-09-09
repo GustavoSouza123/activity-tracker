@@ -144,6 +144,9 @@
                         <th class='action' colspan='2'>action</th>
                     </tr>";
                 foreach($data as $key => $value) {
+                    $dayArr = explode("-", $value['day']);
+                    $value['day'] = $dayArr[2] . "/" . $dayArr[1] . "/" . $dayArr[0];
+
                     echo "<tr>
                             <td>".$value['id']."</td>
                             <td>".$value['time_spent']."</td>
