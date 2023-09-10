@@ -104,7 +104,7 @@
         <input type="submit" value="order">
     </form>
 
-    <form action="" method="post">
+    <form class="show-form" action="" method="post">
         <span>show:</span>
         <input type="checkbox" name="show_id" id="id" <?php if($columnsToShow[0] == 1) echo "value='1'; checked"; else echo "value='0';" ?> />id
         <input type="checkbox" name="show_time" id="time" <?php if($columnsToShow[1] == 1) echo "value='1'; checked"; else echo "value='0';" ?> />time
