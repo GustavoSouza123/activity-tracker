@@ -1,5 +1,6 @@
 <?php
-    require "connection.php";
+    require 'config/config.php';
+    require 'config/connection.php';
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="<?php echo INCLUDE_PATH; ?>css/style.css" />
     <title>Success page</title>
 </head>
 <body>
@@ -80,6 +81,6 @@
         }
     ?>
 
-    <button><a href="activity_data.php">Back to activity page</a></button>
+    <button><a href="<?php echo INCLUDE_PATH; ?>activity_data">Back to activity page</a></button>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
-    require "connection.php";
+    require 'config/config.php';
+    require 'config/connection.php';
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="<?php echo INCLUDE_PATH; ?>css/style.css" />
     <title>Activity data</title>
 </head>
 <body>
@@ -204,7 +205,7 @@
     </div>
 
     <br>
-    <form class="add-activity" action="success.php" method="post">
+    <form class="add-activity" action="success" method="post">
         <b>add a value</b><br>
         <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
         <span>time spent:</span><input type="text" name="time_spent" /><br>
@@ -216,7 +217,7 @@
     <div class="action-window">
         <b>action window</b>
         <div class="edit">
-            <form action="success.php" method="post">
+            <form action="success" method="post">
                 <span>time spent:</span><input type="text" name="time" /><br>
                 <span>day:</span><input type="date" name="day" /><br>
                 <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
@@ -229,7 +230,7 @@
         </div>
         <div class="delete">
             <p>are you sure you want to delete row <span></span> from `<?php echo $activityName; ?>` table with all its data?</p>
-            <form action="success.php" method="post">
+            <form action="success" method="post">
                 <input type="hidden" name="data-name" value="<?php echo $activityName; ?>" />
                 <input type="hidden" name="data-id" />
                 <input type="submit" name="delete" value="ok" />
@@ -239,10 +240,10 @@
     </div>
     
     <br>
-    <button><a href="activities.php">Back to activities page</a></button>
-    <button><a href="index.php">Back to home page</a></button>
+    <button><a href="<?php echo INCLUDE_PATH; ?>activities">Back to activities page</a></button>
+    <button><a href="<?php echo INCLUDE_PATH; ?>home">Back to home page</a></button>
 
-    <script src="js/jquery.js"></script>
-    <script src="js/activity.js"></script>
+    <script src="<?php echo INCLUDE_PATH; ?>js/jquery.js"></script>
+    <script src="<?php echo INCLUDE_PATH; ?>js/activity.js"></script>
 </body>
 </html>

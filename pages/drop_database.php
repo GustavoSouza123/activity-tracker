@@ -1,5 +1,6 @@
 <?php
-    require "connection.php";
+    require 'config/config.php';
+    require 'config/connection.php';
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="<?php echo INCLUDE_PATH; ?>css/style.css" />
     <title>Drop database</title>
 </head>
 <body>
@@ -26,7 +27,7 @@
         }
 
         if(isset($_POST["cancel"])) {
-            header("Location: index.php");
+            header("Location: index.php"); /* ***** */
             exit();
         }
     ?>
@@ -41,6 +42,6 @@
     <p style="margin: 0;"><?php echo $message; ?></p>
 
     <br>
-    <button><a href="index.php">Back to home page</a></button>
+    <button><a href="<?php echo INCLUDE_PATH; ?>home">Back to home page</a></button>
 </body>
 </html>

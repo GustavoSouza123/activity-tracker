@@ -1,5 +1,6 @@
 <?php
-    require "connection.php";
+    require 'config/config.php';
+    require 'config/connection.php';
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="<?php echo INCLUDE_PATH; ?>css/style.css" />
     <title>Activities</title>
 </head>
 <body>
@@ -36,7 +37,7 @@
                             <td class='action edit' row_id='".$value['id']."' row_name='".$value['name']."'>edit</td>
                             <td class='action delete' row_id='".$value['id']."' row_name='".$value['name']."'>delete</td>
                             <td class='action see'>
-                                <form action='activity_data.php' method='post'>
+                                <form action='activity_data' method='post'>
                                     <input type='hidden' name='data-name' value='".$value['name']."' />
                                     <input class='action' type='submit' name='see-data' value='see data' />
                                 </form>
@@ -152,9 +153,9 @@
     </div>
 
     <br>
-    <button><a href="index.php">Back to home page</a></button>
+    <button><a href="<?php echo INCLUDE_PATH; ?>home">Back to home page</a></button>
 
-    <script src="js/jquery.js"></script>
-    <script src="js/activities.js"></script>
+    <script src="<?php echo INCLUDE_PATH; ?>js/jquery.js"></script>
+    <script src="<?php echo INCLUDE_PATH; ?>js/activities.js"></script>
 </body>
 </html>
