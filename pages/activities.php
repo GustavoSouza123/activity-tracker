@@ -70,7 +70,7 @@
                             )";
                     $pdo->exec($sql);
 
-                    header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
+                    header("Location: activities"); // refresh the page after sending the form
                 } catch(PDOException $e) {
                     $addMessage = $sql . "<br>" . $e->getMessage();
                 }
@@ -91,7 +91,7 @@
                     $sql = "ALTER TABLE `".$_POST["data-name"]."` RENAME `".$_POST["name"]."`";
                     $pdo->exec($sql);
 
-                    header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
+                    header("Location: activities"); // refresh the page after sending the form
                 } catch(PDOException $e) {
                     if($e->getCode() == "42S02") {
                         $actionMessage = "the table `".$_POST["name"]."` has already been renamed";
@@ -112,7 +112,7 @@
                 $sql = "DROP TABLE IF EXISTS `".$_POST["data-name"]."`";
                 $pdo->exec($sql);
 
-                header("Location: " . $_SERVER['PHP_SELF']); // refresh the page after sending the form
+                header("Location: activities"); // refresh the page after sending the form
             } catch(PDOException $e) {
                 $actionMessage = $sql . "<br>" . $e->getMessage();
             }
