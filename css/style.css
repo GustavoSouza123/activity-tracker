@@ -5,7 +5,7 @@
 body {
     width: 80%;
     max-width: 300px;
-    margin: 20px auto;
+    margin: 30px auto;
 }
 
 a {
@@ -81,7 +81,29 @@ form.show-form {
     margin: 5px 0;
 }
 
-/* stats (activity_data) */
+/* activity_data */
+
+th:nth-child(1) {
+    width: 40px;
+}
+th:nth-child(2) {
+    width: 90px;
+}
+th:nth-child(3) {
+    width: 85px;
+}
+th:nth-child(4) {
+    width: 85px;
+}
+
+img.arrow {
+    height: 12px;
+    position: relative;
+    top: 2px;
+    left: 45px;
+    cursor: pointer;
+    transition: .2s;
+}
 
 .stats {
     max-width: 300px;
@@ -95,6 +117,14 @@ form.show-form {
     align-items: center;
     justify-content: space-between;
 }
+
+/* scrollbar */
+
+body::-webkit-scrollbar{
+    display: none;
+  }
+
+/* responsiveness */
 
 @media only screen and (max-width: 420px) {
     body {

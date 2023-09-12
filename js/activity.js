@@ -55,4 +55,38 @@ $(function() {
             $('tr').eq(i).find('td').eq(2).hide();
         }
     }
+
+    // show and hide data
+    var rotation = 0;
+    var cookies = document.cookie.replace(/ /g, '').split(';');
+    var hiddenCookie, hiddenCookieIndex;
+    for(i = 0; i < cookies.length; i++) {
+        if(cookies[i].split('=')[0] == 'hidden') {
+            hiddenCookieIndex = i;
+            hiddenCookie = cookies[i].split('=')[1];
+            if(hiddenCookie == 'true') {
+                $('tr').hide();
+                $('tr').eq(0).show();
+                rotation = 180;
+                $('img.arrow').css('transform', 'rotate('+rotation+'deg)');
+            } else {
+                $('tr').show();
+            }
+        }
+    }
+    
+    $('img.arrow').click(function() {
+        rotation = (rotation == 0) ? 180 : 0;
+        $(this).css('transform', 'rotate('+rotation+'deg)');
+        if(hiddenCookie == 'true') {
+            $('tr').show();
+            document.cookie = "hidden=false";
+        } else {
+            $('tr').hide();
+            $('tr').eq(0).show();
+            document.cookie = "hidden=true";
+        }
+        cookies = document.cookie.replace(/ /g, '').split(';');
+        hiddenCookie = cookies[hiddenCookieIndex].split('=')[1]
+    });
 })

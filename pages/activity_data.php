@@ -142,7 +142,7 @@
                         <th>id</th>
                         <th>time_spent</th>
                         <th>day</th>
-                        <th class='action' colspan='2'>action</th>
+                        <th class='action' colspan='2'>action <img class='arrow' src='".INCLUDE_PATH."images/arrow-down.png' alt='arrow down image' /></th>
                     </tr>";
                 foreach($data as $key => $value) {
                     $dayArr = explode("-", $value['day']);
