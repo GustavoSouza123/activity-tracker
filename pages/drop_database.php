@@ -27,7 +27,7 @@
         }
 
         if(isset($_POST["cancel"])) {
-            header("Location: index.php"); /* ***** */
+            header("Location: home"); /* ***** */
             exit();
         }
     ?>
