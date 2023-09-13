@@ -78,6 +78,8 @@
             echo "<p>".$actionMessage."</p>";
         } else {
             echo "<h3>Table modified successfully!</h3>";
+            header('Location: activity_data');
+            exit();
         }
     ?>
 

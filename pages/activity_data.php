@@ -146,12 +146,12 @@
                     </tr>";
                 foreach($data as $key => $value) {
                     $dayArr = explode("-", $value['day']);
-                    $value['day'] = $dayArr[2] . "/" . $dayArr[1] . "/" . $dayArr[0];
+                    $day = $dayArr[2] . "/" . $dayArr[1] . "/" . $dayArr[0];
 
                     echo "<tr>
                             <td>".$value['id']."</td>
                             <td>".$value['time_spent']."</td>
-                            <td>".$value['day']."</td>
+                            <td>".$day."</td>
                             <td class='action edit' row_id='".$value['id']."' row_time='".$value['time_spent']."' row_day='".$value['day']."'>edit</td>
                             <td class='action delete' row_id='".$value['id']."'>delete</td>
                         </tr>";
